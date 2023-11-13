@@ -26,8 +26,6 @@ Serial << "x (via inverse A): " << Motors;
 
 void loop() {
  
-
-
 }
 
 
