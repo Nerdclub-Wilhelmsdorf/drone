@@ -13,6 +13,12 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
+#define VRX_PIN  26 // ESP32 pin GPIO36 (ADC0) connected to VRX pin
+
+#define VRY_PIN  25 // ESP32 pin GPIO39 (ADC0) connected to VRY pin
+
+
+
 // REPLACE WITH YOUR RECEIVER MAC Address
 uint8_t broadcastAddress[] = {0x24, 0x0A, 0xC4, 0x5F, 0xEC, 0xEC};
 
@@ -34,11 +40,6 @@ void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
 }
 
 
-const int X_pinL = 19; // X-AusgangL
-const int Y_pinL = 18; // Y-AusgangL
-
-const int X_pinR = 25; // X-AusgangR
-const int Y_pinR = 26; // Y-AusgangR
 
 void setup() {
   // Init Serial Monitor
@@ -70,31 +71,13 @@ void setup() {
 }
 
 void loop() {
-int X_L;
-int Y_L;
-int X_R;
-int Y_R;
+  Serial.println(getJoystickX());
+  myData.a = getJoystickX();
+  myData.b = getJoystickY();
+  myData.c = 1;
+  myData.d = 1;
 
-
-X_L = analogRead(X_pinL);
-Y_L = analogRead(Y_pinL);
-
-
-X_R = analogRead(X_pinR);
-Y_R = analogRead(Y_pinR);
-
-
-Serial.println(X_L);
-Serial.println(Y_L);
-Serial.println();
-Serial.println(X_R);
-Serial.println(Y_R);
-Serial.println();
-
-  myData.a = X_L;
-  myData.b = Y_L;
-  myData.c = X_R;
-  myData.d = Y_R;
+Serial.println(myData.a);
 
  esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &myData, sizeof(myData));
    
@@ -104,6 +87,33 @@ Serial.println();
   else {
     Serial.println("Error sending the data");
   }
+delay(100);
+}
 
-delay(500);
+float getJoystickY() {
+
+  int valueX = 0; // to store the X-axis value
+
+  valueX = analogRead(VRY_PIN);
+
+  //return ((valueX/4095.0) * 180);
+
+  //return map(valueY, 0, 4095, -180, 180);
+
+  return valueX;
+
+}
+
+float getJoystickX() {
+
+  int valueX = 0; // to store the X-axis value
+
+  valueX = analogRead(VRX_PIN);
+
+  //return ((valueX/4095.0) * 180);
+
+  return map(valueX, 2900, 0, 0, 180);
+
+ // return valueX;
+
 }
