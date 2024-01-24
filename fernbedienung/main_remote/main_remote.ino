@@ -13,9 +13,9 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
-#define VRX_PIN  26 // ESP32 pin GPIO36 (ADC0) connected to VRX pin
+#define VRX_PIN  34 // ESP32 pin GPIO36 (ADC0) connected to VRX pin
 
-#define VRY_PIN  25 // ESP32 pin GPIO39 (ADC0) connected to VRY pin
+#define VRY_PIN  32 // ESP32 pin GPIO39 (ADC0) connected to VRY pin
 
 
 
@@ -92,15 +92,15 @@ delay(100);
 
 float getJoystickY() {
 
-  int valueX = 0; // to store the X-axis value
+  int valueY = 0; // to store the X-axis value
 
-  valueX = analogRead(VRY_PIN);
+  valueY = analogRead(VRY_PIN);
 
   //return ((valueX/4095.0) * 180);
 
   //return map(valueY, 0, 4095, -180, 180);
+  return map(valueY, 2900, 0, 0, 180);
 
-  return valueX;
 
 }
 
@@ -111,8 +111,8 @@ float getJoystickX() {
   valueX = analogRead(VRX_PIN);
 
   //return ((valueX/4095.0) * 180);
-
-  return map(valueX, 2900, 0, 0, 180);
+//return valueX;
+return map(valueX, 2900, 0, 0, 180);
 
  // return valueX;
 
